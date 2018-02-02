@@ -1,3 +1,8 @@
 node_modules
 yarn.lock
 .DS_Store
+.idea/misc.xml
+.idea/modules.xml
+.idea/reactnd-project1-myreads.iml
+.idea/vcs.xml
+.idea/workspace.xml
