@@ -51,7 +51,7 @@ class BooksApp extends React.Component {
       console.log('Book just updated:', book.id);
 
       // ignore the response of update() method because lol that's too many calls to make.
-      BooksAPI.update(book, newShelf).then((books) => {
+      BooksAPI.update(book, newShelf).then(() => {
           BooksAPI.get(book.id).then((updatedBook) => {
               let theBook = updatedBook;
               // filters the recently updatedBook out of the booklist array

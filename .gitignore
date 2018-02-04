@@ -6,3 +6,5 @@ yarn.lock
 .idea/reactnd-project1-myreads.iml
 .idea/vcs.xml
 .idea/workspace.xml
+.idea/codeStyleSettings.xml
+.idea/inspectionProfiles/Project_Default.xml
