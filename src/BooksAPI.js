@@ -12,16 +12,23 @@ const headers = {
   'Authorization': token
 }
 
+// 'get' s a book with a particular id,
+// fetches it,
+// converts the result of the fetch to JSON
+// returns a book
 export const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })
     .then(res => res.json())
     .then(data => data.book)
 
+// Gets all books.
 export const getAll = () =>
   fetch(`${api}/books`, { headers })
     .then(res => res.json())
     .then(data => data.books)
 
+//update takes a book, and a shelf
+// and updates
 export const update = (book, shelf) =>
   fetch(`${api}/books/${book.id}`, {
     method: 'PUT',

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class SearchPage extends React.Component {
     render() {
@@ -30,6 +31,3 @@ class SearchPage extends React.Component {
 
 export default SearchPage;
 
-SearchPage.propTypes = {
-
-};
