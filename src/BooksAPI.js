@@ -27,7 +27,7 @@ export const getAll = () =>
     .then(res => res.json())
     .then(data => data.books)
 
-//update takes a book, and a shelf
+//  update takes a book, and a shelf
 // and updates
 export const update = (book, shelf) =>
   fetch(`${api}/books/${book.id}`, {
