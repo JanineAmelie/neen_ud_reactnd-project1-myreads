@@ -10,18 +10,17 @@ class BooksApp extends React.Component {
   state = {
     initialLoad: true,
     booklist: [],
-    test: '',
   };
 
   componentDidMount() {
     if (this.state.initialLoad) {
-        // this.setState({ initialLoad: false });
+        this.setState({ initialLoad: false });
         BooksAPI.getAll().then((books) => {
             this.setState({ booklist: books });
             this.sortBooksIntoShelves(this.state.booklist);
         })
     }
-  }
+  };
 
   sortBooksIntoShelves(bookList) {
     let tempWantToRead = [];
@@ -43,18 +42,36 @@ class BooksApp extends React.Component {
       wantToReadShelf: tempWantToRead,
       readShelf: tempRead,
       }
-    )
-  }
+    );
+  };
+    // Note to self, use arrow functions when passing down to children to be used as callback.
+    // Doesn't work otherwise
+  moveBookToShelf = (book, newShelf) => {
+      const self = this;
+      console.log('Book just updated:', book.id);
 
-  moveBookToShelf(book, newShelf) {
-  // let newBooks;
-  // BooksAPI.update(book, newShelf).then((books) => {
-  //     newBooks = books;
-  //     this.setState({ test: books });
-  // });
-  this.setState({test: ''});
+      // ignore the response of update() method because lol that's too many calls to make.
+      BooksAPI.update(book, newShelf).then((books) => {
+          BooksAPI.get(book.id).then((updatedBook) => {
+              let theBook = updatedBook;
+              // filters the recently updatedBook out of the booklist array
+              self.setState((prevState) => {
+                  return { booklist: prevState.booklist.filter((item) => item.id !== theBook.id) }
+              });
 
-  }
+              // Modify the book's shelf key to the newShelf we want to move it to.
+              theBook.shelf = newShelf;
+
+              // concat the updatedBook to the booklist array
+              self.setState({
+                  booklist: self.state.booklist.concat(theBook),
+              });
+
+              // booklist array has updated, re-sort the books
+              self.sortBooksIntoShelves(self.state.booklist);
+          });
+      });
+  };
 
   render() {
 
