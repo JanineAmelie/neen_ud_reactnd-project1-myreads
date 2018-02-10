@@ -13,9 +13,9 @@ class SearchPage extends React.Component {
   componentDidMount() {
   }
 
-  // @TODO: clean duplicated code
   handleChange = (event) => {
     this.setState({query: event.target.value});
+    event.preventDefault();
     this.performSearch(event);
   };
 
@@ -23,13 +23,14 @@ class SearchPage extends React.Component {
   performSearch = (event) => {
     const self = this;
     event.preventDefault();
-    BooksAPI.search(this.state.query).then((results) => {
-      if (results) {
-        self.setState({results: results});
-        this.handleResults(this.state.results, this.props.bookList,);
-      }
-    })
-
+    if (/\S/.test(this.state.query)) {
+      BooksAPI.search(this.state.query).then((results) => {
+        if (results) {
+          self.setState({results: results});
+          this.handleResults(this.state.results, this.props.bookList,);
+        }
+      })
+    }
   };
 
   handleBookChangeInSearch = (book, newShelf) => {
