@@ -6,8 +6,7 @@ myReads: A book lending app.
 1. [Project Overview](#project-overview)
 2. [Final Product](#final-product)
 3. [Project Information](#project-information)
-7. [How to Run (View locally)](#how-to-run)
-9. [View Live]()
+4. [How to Run (View locally)](#how-to-run)
 
 ---
 
@@ -59,5 +58,3 @@ I created a React application from scratch and utilize React components to manag
     ```bash
       $> npm start
     ```
-#### **Viewing Live:**
-View the site live here:
