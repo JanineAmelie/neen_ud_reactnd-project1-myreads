@@ -45,10 +45,10 @@ class BooksApp extends React.Component {
     );
   };
     // Note to self, use arrow functions when passing down to children to be used as callback.
-    // Doesn't work otherwise
+    // Doesn't work otherwise,
+    // Ask mentor why: <div moveBookToShelf={() => this.moveBookToShelf />} doesn't work.
   moveBookToShelf = (book, newShelf) => {
       const self = this;
-      console.log('Book just updated:', book.id);
 
       // ignore the response of update() method because lol that's too many calls to make.
       BooksAPI.update(book, newShelf).then(() => {
@@ -71,6 +71,7 @@ class BooksApp extends React.Component {
               self.sortBooksIntoShelves(self.state.booklist);
           });
       });
+
   };
 
   render() {
@@ -81,6 +82,7 @@ class BooksApp extends React.Component {
             <div className="list-books">
               <div className="list-books-title">
                 <h1 className="main-title">neenReads</h1>
+                <h2>  a Book Lending App  </h2>
               </div>
               <div className="list-books-content">
                 <div>
@@ -95,7 +97,7 @@ class BooksApp extends React.Component {
             </div>
         )} />
 
-        <Route path="/search" render={() => <SearchPage />}/>
+        <Route path="/search" render={() => <SearchPage bookList={this.state.booklist} moveBookToShelf={this.moveBookToShelf} />}/>
       </div>
     )
   }

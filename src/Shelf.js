@@ -27,6 +27,9 @@ const Shelf = ({ shelfName, books, moveBookToShelf }) => {
 };
 
 export default Shelf;
+Shelf.defaultProps = {
+  books: [],
+};
 
 Shelf.propTypes = {
   moveBookToShelf: PropTypes.func.isRequired,

@@ -1,35 +1,79 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
-/*
-For search page,
-loop through bookList, and see if any of the ids match the arrays of the results.
-if yes, set the 'shelf' key of the object in booklist, to the shelf-less object in the results.
-then set the new state. Ask stan how he'd go about this.
-* */
-
+import Book from './Book';
 
 class SearchPage extends React.Component {
   state = {
     query: '',
+    resultsArray: [],
+    resultsWithStatus: [],
   };
 
   componentDidMount() {
-    console.log('searchPage has mounted');
   }
 
+  // @TODO: clean duplicated code
   handleChange = (event) => {
     this.setState({query: event.target.value});
+    this.performSearch(event);
   };
 
-  handleSubmit = (event) => {
+
+  performSearch = (event) => {
     const self = this;
-    console.log(this.state.query);
     event.preventDefault();
     BooksAPI.search(this.state.query).then((results) => {
-      console.log(results);
-      self.setState({results: results})
+      if (results) {
+        self.setState({results: results});
+        this.handleResults(this.state.results, this.props.bookList,);
+      }
     })
+
+  };
+
+  handleBookChangeInSearch = (book, newShelf) => {
+    // make copies of values just in case.
+    const theBook = book;
+    const theResultsWithStatus = this.state.resultsWithStatus;
+
+    // set the newShelf of the book
+    theBook.shelf = newShelf;
+
+    // find the indexOf the book we want to update, in the resultsWithStatus array. using the ID of the book
+    const theIndex = theResultsWithStatus.findIndex((resultsBook) => {
+      return theBook.id === resultsBook.id;
+    });
+
+    // if it found something
+    if (theIndex !== -1) {
+      //replace the value of theResultsWithStatus[theIndex] with theBook;
+      theResultsWithStatus[theIndex] = theBook;
+      //set the state so components will re-render
+      this.setState( { resultsWithStatus: theResultsWithStatus });
+    }
+
+    // call the moveBookToShelf method defined in APP so we can update it in the backEnd too :-)
+    this.props.moveBookToShelf(book, newShelf)
+  };
+
+  // is called, right after a search is performed
+  handleResults = (resultsArray, myLibrary) => {
+    const resultsArrayWithShelfStatus = []; // [{}, {}, {},]
+    //loop through resultsArray;
+
+    if (resultsArray.length !== 0) {
+      resultsArray.forEach((result) => {
+        //checks if the id of the result matches any of the IDs in my library.
+        myLibrary.forEach((book) => {
+          if (book.id === result.id) {
+            result.shelf = book.shelf;
+          }
+        });
+        resultsArrayWithShelfStatus.push(result);
+      });
+      this.setState({ resultsWithStatus: resultsArrayWithShelfStatus });
+    }
   };
 
   render() {
@@ -38,22 +82,28 @@ class SearchPage extends React.Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-              {/*
-            NOTES: The search from BooksAPI is limited to a particular set of search terms.
-            You can find these search terms here:
-            https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-            However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-            you don't find a specific author or title. Every search is limited by search terms.
-          */}
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.performSearch}>
               <input type="text" onChange={this.handleChange} value={this.state.query} placeholder="Search by title or author"/>
               <input type="submit" style={ {display: 'none'} } />
           </form>
           </div>
         </div>
         <div className="search-books-results">
-            <ol className="books-grid" > {/*Books go here */} </ol>
+            <ol className="books-grid" >
+              {
+              this.state.resultsWithStatus.length > 0 ?
+                this.state.resultsWithStatus.map((item) => (
+                <Book
+                key={item.id}
+                thisBook={item}
+                cover={item.imageLinks.thumbnail}
+                title={item.title}
+                authors={item.authors}
+                currentShelf={item.shelf}
+                moveBookToShelf={this.handleBookChangeInSearch}
+                />)) : ''
+              }
+            </ol>
         </div>
       </div>
     );

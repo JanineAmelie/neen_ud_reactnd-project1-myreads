@@ -22,6 +22,9 @@ const BookShelfChanger = (props) => {
 };
 
 export default BookShelfChanger;
+BookShelfChanger.defaultProps = {
+  currentShelf: 'none',
+};
 
 BookShelfChanger.propTypes = {
   thisBook: PropTypes.object.isRequired,
